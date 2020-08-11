@@ -91,6 +91,14 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public List<AppUser> getAllDeactivatedUsers() {
+        List<AppUser> appUsers = new ArrayList<>(appUserRepository.findAppUsersByActivatedFalse());
+        System.out.println(appUsers);
+        Collections.reverse(appUsers);
+        return appUsers ;
+    }
+
+    @Override
     public void updateUser(AppUser user) {
         appUserRepository.save(user);
     }

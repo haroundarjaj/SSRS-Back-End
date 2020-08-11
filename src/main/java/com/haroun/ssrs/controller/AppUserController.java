@@ -27,6 +27,9 @@ public class AppUserController {
     @GetMapping("/administration/getAllUser")
     public List<AppUser> getAllUsers() { return appUserService.getAllUsers(); }
 
+    @GetMapping("/administration/getAllDeactivatedUsers")
+    public List<AppUser> getAllDeactivatedUsers() { return appUserService.getAllDeactivatedUsers(); }
+
     @PostMapping("/updateUser")
     public void updateUser(@RequestBody AppUser user) { appUserService.updateUser(user); }
 

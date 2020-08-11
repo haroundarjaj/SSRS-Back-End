@@ -45,12 +45,21 @@ public class DashboardServiceImpl implements DashboardService {
             Dashboard dashboard1 = dashb.get();
             dashboard1.setLastEditTime(dashboard.getLastEditTime());
             dashboard1.getCharts().forEach(chart -> chartRepository.delete(chart));
-            charts.forEach(chart -> {
-                chart.setChartId(sequenceGenerator.generateSequence(chart.SEQUENCE_NAME));
-            });
-            dashboard1.setCharts(charts);
+            if(charts.size() > 0) {
+                System.out.println("save all");
+                charts.forEach(chart -> {
+                    chart.setChartId(sequenceGenerator.generateSequence(chart.SEQUENCE_NAME));
+                });
+                dashboard1.setCharts(charts);
+                chartRepository.saveAll(charts);
+            } else {
+                System.out.println("delete all");
+                List<Chart> list = new ArrayList<>();
+                dashboard1.setCharts(list);
+            }
+
             dashboardRepository.save(dashboard1);
-            chartRepository.saveAll(charts);
+
         } else {
             dashboard.setDashboardId(sequenceGenerator.generateSequence(dashboard.SEQUENCE_NAME));
             charts.forEach(chart -> {

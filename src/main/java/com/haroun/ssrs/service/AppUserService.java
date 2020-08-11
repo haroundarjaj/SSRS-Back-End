@@ -16,6 +16,8 @@ public interface AppUserService {
 
     List<AppUser> getAllUsers ();
 
+    List<AppUser> getAllDeactivatedUsers ();
+
     void updateUser (AppUser user);
 
     void updateUserRole (AppUser user, String role);
