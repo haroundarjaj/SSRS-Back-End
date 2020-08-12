@@ -35,6 +35,7 @@ public class AppUserController {
 
     @PostMapping("/administration/updateUserRole/{role}")
     public void updateUserRole(@RequestBody AppUser user, @PathVariable("role") String role) {
+        System.out.println("test");
         appUserService.updateUserRole(user, role);
     }
 
