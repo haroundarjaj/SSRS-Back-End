@@ -4,6 +4,9 @@ import com.haroun.ssrs.model.AppRole;
 import com.haroun.ssrs.model.AppUser;
 import com.haroun.ssrs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +47,9 @@ public class AppUserServiceImpl implements AppUserService {
         System.out.println(appUser.getUsername());
         for (AppUser appUserObj : appUsers) {
             System.out.println(appUserObj);
-            if (appUserObj.getUsername().equals(appUser.getUsername())){
+            if (appUserObj.getUsername().equals(appUser.getUsername())) {
                 return "username exist";
-            }
-            else if (appUserObj.getEmail().equals(appUser.getEmail())) {
+            } else if (appUserObj.getEmail().equals(appUser.getEmail())) {
                 return "email exist";
             }
         }
@@ -55,7 +57,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUser saveUser (AppUser appUser) {
+    public AppUser saveUser(AppUser appUser) {
         appUser.setUserId(sequenceGenerator.generateSequence(appUser.SEQUENCE_NAME));
         appUser.setPassword(bCryptPasswordEncoder.encode(appUser.getPassword()));
         AppRole appRole = appRoleRepository.findByRole("USER");
@@ -66,6 +68,11 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUser findUserByEmail(String email) {
         return appUserRepository.findByEmail(email);
+    }
+
+    @Override
+    public AppUser getUserData(Long id) {
+        return appUserRepository.findById(id).get();
     }
 
     @Override
@@ -87,7 +94,7 @@ public class AppUserServiceImpl implements AppUserService {
     public List<AppUser> getAllUsers() {
         List<AppUser> appUsers = new ArrayList<>(appUserRepository.findAll());
         Collections.reverse(appUsers);
-        return appUsers ;
+        return appUsers;
     }
 
     @Override
@@ -95,12 +102,47 @@ public class AppUserServiceImpl implements AppUserService {
         List<AppUser> appUsers = new ArrayList<>(appUserRepository.findAppUsersByActivatedFalse());
         System.out.println(appUsers);
         Collections.reverse(appUsers);
-        return appUsers ;
+        return appUsers;
+    }
+
+    @Override
+    public List<AppUser> getUsersByRange(int firstLimit, int numberOfElements) {
+        Page usersPage = appUserRepository.findAll(PageRequest.of(firstLimit, numberOfElements, Sort.Direction.DESC, "creationTime"));
+        List<AppUser> users = usersPage.getContent();
+        System.out.println(users);
+        return users;
     }
 
     @Override
     public void updateUser(AppUser user) {
         appUserRepository.save(user);
+    }
+
+    @Override
+    public void updateUserProfile(AppUser user) {
+        System.out.println("user id: ");
+        System.out.println(user.getUserId());
+        AppUser appUser = appUserRepository.findById(user.getUserId()).get();
+        appUser.setEmail(user.getEmail());
+        appUser.setUsername(user.getUsername());
+        appUser.setIdCardNumber(user.getIdCardNumber());
+        appUser.setAddress(user.getAddress());
+        appUser.setBirthday(user.getBirthday());
+        System.out.println(appUser);
+        appUserRepository.save(appUser);
+    }
+
+    @Override
+    public void updateUserPicture(AppUser user) {
+        AppUser appUser = appUserRepository.findById(user.getUserId()).get();
+        appUser.setImage(user.getImage());
+        appUserRepository.save(appUser);
+    }
+
+    @Override
+    public String getProfileImage(Long id) {
+        AppUser appUser = appUserRepository.findById(id).get();
+        return appUser.getImage();
     }
 
     @Override

@@ -27,6 +27,10 @@ public class AppUser {
     private String username;
     private String email;
     private String password;
+    private String idCardNumber;
+    private String address;
+    private Date birthday;
+    private String image;
     private Date creationTime;
     private boolean activated;
 
@@ -34,11 +38,15 @@ public class AppUser {
     private AppRole role;
 
     @PersistenceConstructor
-    public AppUser(long userId, String username, String email, String password, Date creationTime, boolean activated, AppRole role) {
+    public AppUser(long userId, String username, String email, String password, String idCardNumber, String address, Date birthday, String image, Date creationTime, boolean activated, AppRole role) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.idCardNumber = idCardNumber;
+        this.address = address;
+        this.birthday = birthday;
+        this.image = image;
         this.creationTime = creationTime;
         this.activated = activated;
         this.role = role;

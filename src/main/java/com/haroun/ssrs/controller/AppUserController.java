@@ -21,6 +21,9 @@ public class AppUserController {
         return appUserService.checkExistence(appUser);
     }
 
+    @GetMapping("/getuserdata/{id}")
+    public AppUser getUserData (@PathVariable("id") Long id) {return appUserService.getUserData(id); }
+
     @PostMapping("/user/register")
     public AppUser register(@RequestBody AppUser appUser) { return appUserService.saveUser(appUser); }
 
@@ -30,8 +33,22 @@ public class AppUserController {
     @GetMapping("/administration/getAllDeactivatedUsers")
     public List<AppUser> getAllDeactivatedUsers() { return appUserService.getAllDeactivatedUsers(); }
 
+    @GetMapping("/getUsersByRange/{firstLimit}&{numberOfItems}")
+    public List<AppUser> getUsersByRange (@PathVariable("firstLimit") int firstLimit, @PathVariable("numberOfItems") int numberOfItems ) {
+        return appUserService.getUsersByRange(firstLimit, numberOfItems);
+    }
+
     @PostMapping("/updateUser")
     public void updateUser(@RequestBody AppUser user) { appUserService.updateUser(user); }
+
+    @PostMapping("/updateUserProfile")
+    public void updateUserProfile(@RequestBody AppUser user) { appUserService.updateUserProfile(user); }
+
+    @PostMapping("/updateUserPicture")
+    public void updateUserPicture(@RequestBody AppUser user) { appUserService.updateUserPicture(user); }
+
+    @GetMapping("/user/getProfileImage/{id}")
+    public String getProfileImage(@PathVariable("id") Long id) { return  appUserService.getProfileImage(id); }
 
     @PostMapping("/administration/updateUserRole/{role}")
     public void updateUserRole(@RequestBody AppUser user, @PathVariable("role") String role) {
