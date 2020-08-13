@@ -39,9 +39,10 @@ public class DatabaseSourceServiceImpl implements DatabaseSourceService {
     public boolean testConnection(DatabaseSource dbs) {
         String url = "";
         String driverClass = "";
-        Boolean isConnected = false;
+        boolean isConnected = false;
         List<String> listTables = new ArrayList<>();
         DataSource dsbuilder = null;
+        System.out.print("dd => " + dbs);
         if (dbs.getType().equals("SQLServer")) {
             url = "jdbc:sqlserver://" + dbs.getHost() + ":"+ dbs.getPort() +";databaseName=" + dbs.getDatabaseName() + ";";
             driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
@@ -59,14 +60,19 @@ public class DatabaseSourceServiceImpl implements DatabaseSourceService {
                 isConnected = false;
             }
         }
-        if (dbs.getType().equals("mongoDB")){
+        if (dbs.getType().equals("MongoDB")) {
             try {
-                String URI = "mongodb://" + dbs.getUsername() + ":" + dbs.getPassword() + "@" + dbs.getHost() + ":" + dbs.getPort() + "/";
-                MongoClient mongoClient = MongoClients.create(URI);
+                String URI =
+                        "mongodb://" +
+                                dbs.getUsername() +
+                                ":" + dbs.getPassword() +
+                                "@" + dbs.getHost() + ":"
+                                + dbs.getPort() + "/";
+                MongoClient m = MongoClients.create(URI);
                 isConnected = true;
-                mongoClient.close();
-            } catch (Exception e){
-                isConnected= false;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                isConnected = false;
             }
         }
         return isConnected;
@@ -94,15 +100,16 @@ public class DatabaseSourceServiceImpl implements DatabaseSourceService {
                     (rs, rowNum) -> listTables.add(rs.getString("TABLE_NAME"))
             );
         }
-        if (dbs.getType().equals("mongoDB")){
+        if (dbs.getType().equals("MongoDB")){
             try {
-                String URI = "mongodb://" + dbs.getUsername() + ":" + dbs.getPassword() + "@" + dbs.getHost() + ":" + dbs.getPort() + "/";
+                String URI =
+                        "mongodb://" + dbs.getHost() + ":"
+                                + dbs.getPort() + "/";
                 MongoClient mongoClient = MongoClients.create(URI);
                 MongoDatabase database = mongoClient.getDatabase(dbs.getDatabaseName());
                 for (String name : database.listCollectionNames()) {
                     listTables.add(name);
                 }
-                mongoClient.close();
             } catch (Exception e){
                 System.out.println(e.getMessage());
             }
@@ -131,17 +138,19 @@ public class DatabaseSourceServiceImpl implements DatabaseSourceService {
             String sqlQuery = "select * from " + table;
             tableData.addAll(jdbcTemplate.queryForList(sqlQuery));
         }
-        if (dbs.getType().equals("mongoDB")){
+        if (dbs.getType().equals("MongoDB")){
             try {
-                String URI = "mongodb://" + dbs.getUsername() + ":" + dbs.getPassword() + "@" + dbs.getHost() + ":" + dbs.getPort() + "/";
+                String URI =
+                        "mongodb://" + dbs.getHost() + ":"
+                                + dbs.getPort()+ "/";
                 MongoClient mongoClient = MongoClients.create(URI);
                 MongoDatabase database = mongoClient.getDatabase(dbs.getDatabaseName());
-                MongoCollection<Document> collection = database.getCollection(table);
-                collection.find().forEach((Consumer<Document>) obj -> {
-                    obj.remove("_class");
-                    tableData.add(obj);
+                MongoCollection<Document> h = database.getCollection(table);
+                h.find().limit(1000).forEach((Consumer<Document>) d -> {
+                    d.remove("_class");
+                    tableData.add(d);
                 });
-                mongoClient.close();
+
             } catch (Exception e){
                 System.out.println(e.getMessage());
             }
