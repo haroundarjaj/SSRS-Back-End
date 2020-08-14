@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -24,5 +25,8 @@ public class Algorithms implements Serializable {
     private String algoName;
     private String algoFormula;
     private Date created_at;
+
+    @DBRef
+    private AppUser user;
 
 }
