@@ -2,6 +2,7 @@ package com.haroun.ssrs.service;
 
 
 import com.haroun.ssrs.model.Algorithms;
+import com.haroun.ssrs.model.AppUser;
 import com.haroun.ssrs.repository.AlgorithmRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
