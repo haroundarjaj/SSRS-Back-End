@@ -2,6 +2,7 @@ package com.haroun.ssrs.controller;
 
 import com.haroun.ssrs.model.DatabaseSource;
 import com.haroun.ssrs.service.DatabaseSourceService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,16 +33,16 @@ public class DatabaseSourceController {
         return  dbSourceService.getTableData(dbs, tableName);
     }
 
-    @GetMapping("/getsources&{userEmail}")
-    public List<DatabaseSource> getSources (@PathVariable("userEmail") String userEmail){
-        return  dbSourceService.getAllDatabaseSources(userEmail);
+    @GetMapping("/getsources")
+    public List<DatabaseSource> getSources (Authentication authentication){
+        return  dbSourceService.getAllDatabaseSources(authentication.getName());
     }
 
-    @PostMapping("/savesource&{userEmail}")
-    public void saveSource (@RequestBody DatabaseSource dbs, @PathVariable("userEmail") String userEmail) {
-        dbSourceService.saveDatabaseSource(dbs, userEmail);
+    @PostMapping("/savesource")
+    public void saveSource (@RequestBody DatabaseSource dbs, Authentication authentication) {
+        dbSourceService.saveDatabaseSource(dbs, authentication.getName());
     }
 
     @PostMapping("/deletesource")
-    public void deleteSource (DatabaseSource dbs) { dbSourceService.deleteDatabaseSource(dbs); }
+    public void deleteSource (@RequestBody DatabaseSource dbs) { dbSourceService.deleteDatabaseSource(dbs); }
 }

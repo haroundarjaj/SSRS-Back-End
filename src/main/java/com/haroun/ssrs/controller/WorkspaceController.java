@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haroun.ssrs.model.Chart;
 import com.haroun.ssrs.model.Workspace;
 import com.haroun.ssrs.service.WorkspaceService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,17 +21,17 @@ public class WorkspaceController {
         this.workspaceService = workspaceService;
     }
 
-    @GetMapping("/getAll&{userEmail}")
-    public List<Workspace> getAllWorkspaces (@PathVariable("userEmail") String userEmail) {
-        return workspaceService.getAllWorkspaces(userEmail);
+    @GetMapping("/getAll")
+    public List<Workspace> getAllWorkspaces (Authentication authentication) {
+        return workspaceService.getAllWorkspaces(authentication.getName());
     }
 
-    @PostMapping("/save&{userEmail}")
-    public boolean saveWorkspace (@RequestBody List<Object> objects, @PathVariable("userEmail") String userEmail) {
+    @PostMapping("/save")
+    public boolean saveWorkspace (@RequestBody List<Object> objects, Authentication authentication) {
         ObjectMapper mapper = new ObjectMapper();
         Workspace workspace = mapper.convertValue(objects.get(0), Workspace.class);
         List<Chart> charts = mapper.convertValue(objects.get(1), new TypeReference<List<Chart>>(){});
-        return workspaceService.saveWorkspace(workspace, charts, userEmail);
+        return workspaceService.saveWorkspace(workspace, charts, authentication.getName());
     }
 
     @GetMapping("/{id}/charts")
@@ -38,9 +39,9 @@ public class WorkspaceController {
         return workspaceService.getTemplateCharts(id);
     }
 
-    @GetMapping("/checkExistence/{title}&{userEmail}")
-    public boolean checkExistWorkspace (@PathVariable("title") String title, @PathVariable("userEmail") String userEmail) {
-        return workspaceService.checkExistWorkspace(title, userEmail);
+    @GetMapping("/checkExistence/{title}")
+    public boolean checkExistWorkspace (@PathVariable("title") String title, Authentication authentication) {
+        return workspaceService.checkExistWorkspace(title, authentication.getName());
     }
 
     @PostMapping("/update")

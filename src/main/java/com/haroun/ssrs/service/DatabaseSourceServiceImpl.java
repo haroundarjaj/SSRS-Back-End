@@ -176,6 +176,8 @@ public class DatabaseSourceServiceImpl implements DatabaseSourceService {
 
     @Override
     public void deleteDatabaseSource(DatabaseSource dbs) {
-        dbsourceRepository.deleteById(dbs.getDatabaseSourceId());
+        System.out.println("deleting");
+        System.out.println(dbs);
+        dbsourceRepository.delete(dbs);
     }
 }

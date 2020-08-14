@@ -90,6 +90,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public List<Object> getTableDataByRows(String tableName, int rowsNumber) {
+        System.out.println(tableName);
         List<Object> tableData = new ArrayList<>();
         try {
             String URI = "mongodb://localhost/";
@@ -105,6 +106,7 @@ public class DashboardServiceImpl implements DashboardService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        System.out.println(tableData);
         return tableData;
     }
 }

@@ -2,6 +2,7 @@ package com.haroun.ssrs.controller;
 
 import com.haroun.ssrs.model.ReportTemplate;
 import com.haroun.ssrs.service.ReportTemplateService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +18,14 @@ public class ReportTemplateController {
         this.reportTemplateService = reportTemplateService;
     }
 
-    @GetMapping("/getAll&{userEmail}")
-    public List<ReportTemplate> getAllTemplates (@PathVariable("userEmail") String userEmail) {
-        return reportTemplateService.getAllTemplates(userEmail);
+    @GetMapping("/getAll")
+    public List<ReportTemplate> getAllTemplates (Authentication authentication) {
+        return reportTemplateService.getAllTemplates(authentication.getName());
     }
 
-    @PostMapping("/save&{userEmail}")
-    public void saveReportTemplate (@RequestBody ReportTemplate reportTemplate, @PathVariable("userEmail") String userEmail) {
-        reportTemplateService.insertTemplate(reportTemplate, userEmail);
+    @PostMapping("/save")
+    public void saveReportTemplate (@RequestBody ReportTemplate reportTemplate, Authentication authentication) {
+        reportTemplateService.insertTemplate(reportTemplate, authentication.getName());
     }
 
     @PostMapping("/delete")

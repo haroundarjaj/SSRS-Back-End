@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haroun.ssrs.model.Chart;
 import com.haroun.ssrs.model.Dashboard;
 import com.haroun.ssrs.service.DashboardService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,17 +21,17 @@ public class DashboardController {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping("/{userEmail}/charts")
-    public List<Chart> getDashboardCharts (@PathVariable("userEmail") String userEmail) {
-        return dashboardService.getDashboardCharts(userEmail);
+    @GetMapping("/charts")
+    public List<Chart> getDashboardCharts (Authentication authentication) {
+        return dashboardService.getDashboardCharts(authentication.getName());
     }
 
-    @PostMapping("/save&{userEmail}")
-    public boolean updateDashboard (@RequestBody List<Object> objects, @PathVariable("userEmail") String userEmail) {
+    @PostMapping("/save")
+    public boolean updateDashboard (@RequestBody List<Object> objects, Authentication authentication) {
         ObjectMapper mapper = new ObjectMapper();
         Dashboard dashboard = mapper.convertValue(objects.get(0), Dashboard.class);
         List<Chart> charts = mapper.convertValue(objects.get(1), new TypeReference<List<Chart>>(){});
-        return dashboardService.updateDashboard(dashboard, charts, userEmail);
+        return dashboardService.updateDashboard(dashboard, charts, authentication.getName());
     }
 
     @GetMapping("/data/getbyrows/{tableName}&{rowsNumber}")

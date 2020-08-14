@@ -2,6 +2,7 @@ package com.haroun.ssrs.controller;
 
 import com.haroun.ssrs.model.Formula;
 import com.haroun.ssrs.service.FormulaService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +18,14 @@ public class FormulaController {
         this.formulaService = formulaService;
     }
 
-    @GetMapping("/getAll&{userEmail}")
-    public List<Formula> getAllFormulas (@PathVariable("userEmail") String userEmail) {
-        return formulaService.getAllFormulas(userEmail);
+    @GetMapping("/getAll")
+    public List<Formula> getAllFormulas (Authentication authentication) {
+        return formulaService.getAllFormulas(authentication.getName());
     }
 
-    @PostMapping("/insert&{userEmail}")
-    public String insertFormula (@RequestBody Formula formula, @PathVariable("userEmail") String userEmail) {
-        return formulaService.insertFormula(formula, userEmail);
+    @PostMapping("/insert")
+    public String insertFormula (@RequestBody Formula formula, Authentication authentication) {
+        return formulaService.insertFormula(formula, authentication.getName());
     }
 
     @PostMapping("/solve")
