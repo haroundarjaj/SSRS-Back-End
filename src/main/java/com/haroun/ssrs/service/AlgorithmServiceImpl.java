@@ -4,6 +4,7 @@ package com.haroun.ssrs.service;
 import com.haroun.ssrs.model.Algorithms;
 import com.haroun.ssrs.model.AppUser;
 import com.haroun.ssrs.repository.AlgorithmRepository;
+import com.haroun.ssrs.repository.AppUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +14,11 @@ import java.util.List;
 @Service
 @Transactional
 public class AlgorithmServiceImpl implements AlgorithmService {
-
+    private AppUserRepository appUserRepository;
     private AlgorithmRepository algorithmRepository;
-    public AlgorithmServiceImpl(AlgorithmRepository algorithmRepository){
+    public AlgorithmServiceImpl(AlgorithmRepository algorithmRepository, AppUserRepository appUserRepository){
         this.algorithmRepository = algorithmRepository;
+        this.appUserRepository = appUserRepository;
     }
     @Override
     public List<Algorithms> getAllAlgorithm() {
@@ -24,14 +26,20 @@ public class AlgorithmServiceImpl implements AlgorithmService {
     }
 
     @Override
-    public Algorithms saveAlgorithm(Algorithms algorithms) {
-        Algorithms algo = new Algorithms();
-        algo.setAlgoDescription(algorithms.getAlgoDescription());
-        algo.setAlgoName(algorithms.getAlgoName());
-        algo.setAlgoType(algorithms.getAlgoType());
-        algo.setCreated_at(new Date());
-        algo.setAlgoFormula(algorithms.getAlgoFormula());
-        return algorithmRepository.save(algo);
+    public Algorithms saveAlgorithm(Algorithms algorithms, String owner) {
+        AppUser user = appUserRepository.findByEmail(owner);
+        if (user != null) {
+            Algorithms algo = new Algorithms();
+            algo.setAlgoDescription(algorithms.getAlgoDescription());
+            algo.setAlgoName(algorithms.getAlgoName());
+            algo.setAlgoType(algorithms.getAlgoType());
+            algo.setCreated_at(new Date());
+            algo.setAlgoFormula(algorithms.getAlgoFormula());
+            algo.setUser(user);
+            return algorithmRepository.save(algo);
+        } else {
+            throw new ExceptionMessage("Cannot find the user and save algorithm");
+        }
     }
 
     @Override
@@ -52,5 +60,15 @@ public class AlgorithmServiceImpl implements AlgorithmService {
             al.setAlgoFormula(algorithms.getAlgoFormula());
             return algorithmRepository.save(al);
         }).orElseThrow(()-> new ExceptionMessage("Impossible to update Algorithm"));
+    }
+
+    @Override
+    public List<Algorithms> getAlgorithmByUser(String owner) {
+        AppUser user = appUserRepository.findByEmail(owner);
+        if (user != null) {
+            return algorithmRepository.findAllByUser(user);
+        } else {
+            throw new ExceptionMessage("Cannot find the user and get his algorithms");
+        }
     }
 }
