@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Dashboard {
+public class Dashboard implements Serializable {
 
     @Transient
     public static final String SEQUENCE_NAME = "dashboard_sequence";

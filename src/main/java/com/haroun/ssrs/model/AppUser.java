@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Document(value = "users")
@@ -17,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AppUser {
+public class AppUser implements Serializable {
 
     @Transient
     public static final String SEQUENCE_NAME = "users_sequence";

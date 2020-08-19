@@ -9,12 +9,14 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
+
 @Document(value = "roles")
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
-public class AppRole {
+public class AppRole implements Serializable {
 
     @Transient
     public static final String SEQUENCE_NAME = "roles_sequence";
