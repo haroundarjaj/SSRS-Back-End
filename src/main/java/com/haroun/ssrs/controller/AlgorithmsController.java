@@ -5,6 +5,7 @@ import com.haroun.ssrs.model.Algorithms;
 import com.haroun.ssrs.service.AlgorithmApplyService;
 import com.haroun.ssrs.service.AlgorithmService;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -20,12 +21,12 @@ public class AlgorithmsController {
         this.algorithmApplyService = algorithmApplyService;
     }
     @RequestMapping(path = "algorithms",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Algorithms> getAllAlgorithms(){
-        return this.algorithmService.getAllAlgorithm();
+    public List<Algorithms> getAllAlgorithms( Authentication authentication){
+        return this.algorithmService.getAlgorithmByUser(authentication.getName());
     }
     @RequestMapping(path = "algorithm",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Algorithms saveAlgorithms(@RequestBody Algorithms algorithm){
-        return this.algorithmService.saveAlgorithm(algorithm);
+    public Algorithms saveAlgorithms(@RequestBody Algorithms algorithm, Authentication authentication){
+        return this.algorithmService.saveAlgorithm(algorithm, authentication.getName());
     }
 
     @PostMapping("/import/database/test/{result}/{algoId}")
