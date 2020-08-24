@@ -25,6 +25,7 @@ public class ReportTemplate implements Serializable {
 
     @Id
     private long reportTemplateId;
+    private String name;
     private String templateParam;
     private Date creationTime;
 
@@ -32,8 +33,9 @@ public class ReportTemplate implements Serializable {
     private AppUser user;
 
     @PersistenceConstructor
-    public ReportTemplate(long reportTemplateId, String templateParam, Date creationTime, AppUser user) {
+    public ReportTemplate(long reportTemplateId, String name, String templateParam, Date creationTime, AppUser user) {
         this.reportTemplateId = reportTemplateId;
+        this.name = name;
         this.templateParam = templateParam;
         this.creationTime = creationTime;
         this.user = user;

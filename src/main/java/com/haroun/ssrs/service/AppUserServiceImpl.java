@@ -109,6 +109,9 @@ public class AppUserServiceImpl implements AppUserService {
     public List<AppUser> getUsersByRange(int firstLimit, int numberOfElements) {
         Page usersPage = appUserRepository.findAll(PageRequest.of(firstLimit, numberOfElements, Sort.Direction.DESC, "creationTime"));
         List<AppUser> users = usersPage.getContent();
+        System.out.println("firstLimit " + firstLimit);
+        System.out.println("numberOfElements  " + numberOfElements);
+        System.out.println("users");
         System.out.println(users);
         return users;
     }
