@@ -4,6 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,31 +80,58 @@ public class FileSourceServiceImpl implements FileSourceService {
     }
 
     @Override
-    public String readTextFile(File file, String separator) {
-        String separatorDecoded = URLDecoder.decode(separator);
+    public String readTextFile(File file, boolean header, String separator) {
+        JsonArray sheetArray = new JsonArray();
+        String separatorDecoded = URLDecoder.decode("%" + separator);
         System.out.println(separator);
-        List<String[]> data = new ArrayList<>();
         BufferedReader br = null;
         String line = "";
-
         try {
 
-            try {
                 br = new BufferedReader(new FileReader(file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+
+            List <String> fieldNames = null;
+            if(header) {
+                if ((line = br.readLine()) != null) {
+                    line = line.replace("\"","");
+                    String[] items = line.split(separatorDecoded);
+                    fieldNames = new ArrayList<>();
+                    for (String elem: items
+                         ) {
+                        fieldNames.add(elem);
+                    }
+                }
+            } else {
+                fieldNames = new ArrayList<>();
+                if ((line = br.readLine()) != null) {
+                    JsonObject jsonObject = new JsonObject();
+                    line = line.replace("\"","");
+                    String[] items = line.split(separatorDecoded);
+                    for (int i = 0; i < items.length ; i++) {
+                        fieldNames.add("Field " + (i + 1));
+                    }
+                    for (int i = 0; i < fieldNames.size(); i++) {
+                        jsonObject.addProperty(fieldNames.get(i), items[i]);
+                    }
+                    sheetArray.add(jsonObject);
+                };
             }
             while (true) {
-                try {
-                    if (!((line = br.readLine()) != null)) break;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                if ((line = br.readLine()) == null) break;
+
                 // use comma as separator
                 line = line.replace("\"","");
-                String[] item = line.split(separator);
-                data.add(item);
+                String[] item = line.split(separatorDecoded);
+                JsonObject jsonObject = new JsonObject();
+                for (int i = 0; i < fieldNames.size(); i++) {
+                    jsonObject.addProperty(fieldNames.get(i), item[i]);
+                }
+                sheetArray.add(jsonObject);
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             if (br != null) {
                 try {
@@ -111,12 +141,34 @@ public class FileSourceServiceImpl implements FileSourceService {
                 }
             }
         }
-        return data.toString();
+        return sheetArray.toString();
+    }
+
+    @Override
+    public String readDwgFile(File file) {
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            br = new BufferedReader(new FileReader(file));
+            String line;
+            while((line=br.readLine())!= null){
+                sb.append(line.trim());
+            }
+            System.out.println("string");
+            System.out.println(sb);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return sb.toString();
     }
 
     @Override
     public String readCsvFile(File file, boolean header) {
-        JsonArray sheetArray = new JsonArray();;
+        JsonArray sheetArray = new JsonArray();
         try (InputStream in = new FileInputStream(file);) {
             CSV csv = new CSV(true, ',', in );
             List <String> fieldNames = null;
@@ -155,5 +207,35 @@ public class FileSourceServiceImpl implements FileSourceService {
         System.out.println("return");
         System.out.println(sheetArray.toString());
         return sheetArray.toString();
+    }
+
+    @Override
+    public String readXmlFile(File file) {
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            br = new BufferedReader(new FileReader(file));
+            String line;
+            while((line=br.readLine())!= null){
+                sb.append(line.trim());
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject json = XML.toJSONObject(sb.toString());
+        try {
+            Iterator<String> keys = json.keys();
+            String str_Name=keys.next();
+            JSONObject firstElement = (JSONObject) json.get(str_Name);
+            Iterator<String> keys2 = json.keys();
+            String str_Name2 =keys2.next();
+            JSONObject secondElement = (JSONObject) firstElement.get(str_Name2);
+        } catch(JSONException je) {
+            System.out.println(je.toString());
+        }
+        return json.toString();
     }
 }

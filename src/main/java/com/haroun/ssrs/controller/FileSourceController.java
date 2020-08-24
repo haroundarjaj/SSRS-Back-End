@@ -59,5 +59,65 @@ public class FileSourceController {
         return data;
     }
 
+    @RequestMapping(value = "/xml", headers = "content-type=multipart/*", method = RequestMethod.POST)
+    public String readXmlFile(@RequestParam(value = "file", required = true) MultipartFile multipartFile) throws IOException {
+        System.out.println(multipartFile.getSize());
+        System.out.println(multipartFile.getBytes());
+        System.out.println(multipartFile.getContentType());
+        File tempFile = File.createTempFile("multipartFileTmp", multipartFile.getName());
+
+        tempFile.deleteOnExit();
+
+        multipartFile.transferTo(tempFile);
+
+        System.out.println(tempFile);
+        String data = fileSourceService.readXmlFile(tempFile);
+
+        System.out.println("data");
+        System.out.println(data);
+        tempFile.delete();
+        return data;
+    }
+
+    @RequestMapping(value = "/txt&header={header}&separator={separator}", headers = "content-type=multipart/*", method = RequestMethod.POST)
+    public String readTxtFile(@RequestParam(value = "file", required = true) MultipartFile multipartFile, @PathVariable("header") boolean header, @PathVariable("separator") String separator) throws IOException {
+        System.out.println(multipartFile.getSize());
+        System.out.println(multipartFile.getBytes());
+        System.out.println(multipartFile.getContentType());
+        File tempFile = File.createTempFile("multipartFileTmp", multipartFile.getName());
+
+        tempFile.deleteOnExit();
+
+        multipartFile.transferTo(tempFile);
+
+        System.out.println(tempFile);
+        String data = fileSourceService.readTextFile(tempFile, header, separator);
+
+        System.out.println("data");
+        System.out.println(data);
+        tempFile.delete();
+        return data;
+    }
+
+    @RequestMapping(value = "/dwg", headers = "content-type=multipart/*", method = RequestMethod.POST)
+    public String readDwgFile(@RequestParam(value = "file", required = true) MultipartFile multipartFile) throws IOException {
+        System.out.println(multipartFile.getSize());
+        System.out.println(multipartFile.getBytes());
+        System.out.println(multipartFile.getContentType());
+        File tempFile = File.createTempFile("multipartFileTmp", multipartFile.getName());
+
+        tempFile.deleteOnExit();
+
+        multipartFile.transferTo(tempFile);
+
+        System.out.println(tempFile);
+        String data = fileSourceService.readDwgFile(tempFile);
+
+        System.out.println("data");
+        System.out.println(data);
+        tempFile.delete();
+        return data;
+    }
+
 
 }

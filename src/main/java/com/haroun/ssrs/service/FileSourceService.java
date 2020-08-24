@@ -6,7 +6,11 @@ public interface FileSourceService {
 
     String readExcelFile(File file, int sheetNumber);
 
-    String readTextFile(File file, String separator);
-
     String readCsvFile(File file, boolean header);
+
+    String readXmlFile(File file);
+
+    String readTextFile(File file, boolean header, String separator);
+
+    String readDwgFile(File file);
 }
