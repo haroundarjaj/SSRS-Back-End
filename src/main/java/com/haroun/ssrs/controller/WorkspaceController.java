@@ -41,15 +41,15 @@ public class WorkspaceController {
 
     @GetMapping("/checkExistence/{title}")
     public boolean checkExistWorkspace (@PathVariable("title") String title, Authentication authentication) {
-        return workspaceService.checkExistWorkspace(title, authentication.getName());
+        return workspaceService.checkExistWorkspace(title);
     }
 
     @PostMapping("/update")
-    public boolean updateWorkspace (@RequestBody List<Object> objects) {
+    public boolean updateWorkspace (@RequestBody List<Object> objects, Authentication authentication) {
         ObjectMapper mapper = new ObjectMapper();
         Workspace workspace = mapper.convertValue(objects.get(0), Workspace.class);
         List<Chart> charts = mapper.convertValue(objects.get(1), new TypeReference<List<Chart>>(){});
-        return workspaceService.updateWorkspace(workspace, charts);
+        return workspaceService.updateWorkspace(workspace, charts, authentication.getName());
     }
 
     @PostMapping("/delete")

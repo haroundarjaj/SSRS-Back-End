@@ -11,11 +11,11 @@ public interface WorkspaceService {
 
     boolean saveWorkspace (Workspace workspace, List<Chart> charts, String userEmail);
 
-    boolean updateWorkspace (Workspace workspace, List<Chart> charts);
+    boolean updateWorkspace (Workspace workspace, List<Chart> charts, String own);
 
     List<Chart> getTemplateCharts(long id);
 
-    boolean checkExistWorkspace(String title , String userEmail);
+    boolean checkExistWorkspace(String title);
 
     boolean deleteWorkspace (Workspace workspace);
 }

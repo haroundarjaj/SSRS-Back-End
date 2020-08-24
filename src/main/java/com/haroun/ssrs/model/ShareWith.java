@@ -16,6 +16,7 @@ public class ShareWith implements Serializable {
     @Id
     private String shareId;
     private Date sharedAt;
+    private Date lastUpdate;
     @DBRef
     private Workspace workspace;
     private String emails;

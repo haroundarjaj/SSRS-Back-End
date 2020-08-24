@@ -10,6 +10,7 @@ import com.haroun.ssrs.repository.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ShareWithServiceImpl implements ShareWithService {
@@ -26,11 +27,19 @@ public class ShareWithServiceImpl implements ShareWithService {
     @Override
     public ShareWith shareWith(long workspaceId, ShareWith shareWith) {
         return this.workspaceRepository.findById(workspaceId).map(workspace -> {
-            ShareWith shareWith1 = new ShareWith();
-            shareWith1.setWorkspace(workspace);
-            shareWith1.setSharedAt(new Date());
-            shareWith1.setEmails(shareWith.getEmails());
-            return this.shareWithRepository.save(shareWith1);
+            ShareWith shareWith2 = shareWithRepository.findByWorkspace(workspace);
+            if (shareWith2 != null) {
+                shareWith2.setEmails(shareWith2.getEmails().concat("-" + shareWith.getEmails()));
+                shareWith2.setLastUpdate(new Date());
+                return this.shareWithRepository.save(shareWith2);
+            } else {
+                ShareWith shareWith1 = new ShareWith();
+                shareWith1.setWorkspace(workspace);
+                shareWith1.setSharedAt(new Date());
+                shareWith1.setLastUpdate(new Date());
+                shareWith1.setEmails(shareWith.getEmails());
+                return this.shareWithRepository.save(shareWith1);
+            }
         }).orElseThrow(() -> new ExceptionMessage("Cannot share the workspace"));
     }
 
@@ -73,12 +82,39 @@ public class ShareWithServiceImpl implements ShareWithService {
         return workspaceRepository.findById(workspaceId).map(workspace -> {
             ShareWith shareWith = shareWithRepository.findByWorkspace(workspace);
             String emails = shareWith.getEmails();
+            System.out.println(emails);
             String[] emailsArray = emails.split("-");
             for (String s : emailsArray) {
                 AppUser user = appUserRepository.findByEmail(s);
-                appUsers.add(user);
+                if (user!= null) {
+                    appUsers.add(user);
+                }
             }
-            return appUsers;
+            return appUsers ;
         }).orElseThrow(() -> new ExceptionMessage("cannot get Workspace users"));
+    }
+
+    @Override
+    public List<AppUser> getUsersToShare(long workspaceId, String owner) {
+        List<AppUser> appUsers;
+        AppUser user = appUserRepository.findByEmail(owner);
+        appUsers = workspaceRepository.findById(workspaceId).map(workspace -> {
+            ShareWith shareWith = shareWithRepository.findByWorkspace(workspace);
+            if (shareWith!= null){
+                String emails = shareWith.getEmails();
+                List<AppUser> appUsers2 = appUserRepository.findAll();
+                String[] emailsArray = emails.split("-");
+                for (String s : emailsArray) {
+                    AppUser user1 = appUserRepository.findByEmail(s);
+                    appUsers2.remove(user1);
+                }
+                appUsers2.remove(user);
+                return appUsers2;
+            }
+            else {
+                return appUserRepository.findAll().stream().filter(appUser -> !appUser.getEmail().equals(user.getEmail())).collect(Collectors.toList());
+            }
+        }).orElseThrow(() -> new ExceptionMessage("cannot get Workspace users"));
+        return appUsers;
     }
 }
