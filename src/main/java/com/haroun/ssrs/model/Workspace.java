@@ -28,7 +28,7 @@ public class Workspace implements Serializable {
     private long workspaceId;
     private String title;
     private Date creationTime;
-
+    private String lastUpdate;
     @DBRef
     private AppUser user;
 

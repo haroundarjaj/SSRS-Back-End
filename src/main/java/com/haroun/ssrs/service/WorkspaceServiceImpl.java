@@ -2,9 +2,11 @@ package com.haroun.ssrs.service;
 
 import com.haroun.ssrs.model.AppUser;
 import com.haroun.ssrs.model.Chart;
+import com.haroun.ssrs.model.ShareWith;
 import com.haroun.ssrs.model.Workspace;
 import com.haroun.ssrs.repository.AppUserRepository;
 import com.haroun.ssrs.repository.ChartRepository;
+import com.haroun.ssrs.repository.ShareWithRepository;
 import com.haroun.ssrs.repository.WorkspaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,6 +32,9 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Autowired
     SequenceGeneratorService sequenceGenerator;
+
+    @Autowired
+    private ShareWithRepository shareWithRepository;
 
     @Override
     public List<Workspace> getAllWorkspaces(String userEmail) {
@@ -49,15 +55,11 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public boolean checkExistWorkspace(String title, String userEmail) {
-        AppUser user = appUserRepository.findByEmail(userEmail);
-        List<Workspace> workspaces = workspaceRepository.findAllByUser(user);
+    public boolean checkExistWorkspace(String title) {
+        Workspace workspaces = workspaceRepository.findByTitle(title);
         System.out.println(workspaces);
-        for (Workspace workspace : workspaces) {
-            if (workspace.getTitle().equals(title)) {
-                System.out.println(workspace.getTitle());
-                return true;
-            }
+        if (workspaces != null) {
+            return true;
         }
         return false;
     }
@@ -65,6 +67,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Override
     public boolean deleteWorkspace(Workspace workspace) {
         workspace.getCharts().forEach(chart -> chartRepository.delete(chart));
+        ShareWith shareWith = shareWithRepository.findByWorkspace(workspace);
+        shareWithRepository.delete(shareWith);
         workspaceRepository.delete(workspace);
         return true;
     }
@@ -78,19 +82,21 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         });
         workspace.setCharts(charts);
         workspace.setUser(user);
+        workspace.setLastUpdate(user.getEmail() + " at " + new Date().toString());
         workspaceRepository.save(workspace);
         chartRepository.saveAll(charts);
         return true;
     }
 
     @Override
-    public boolean updateWorkspace(Workspace workspace, List<Chart> charts) {
+    public boolean updateWorkspace(Workspace workspace, List<Chart> charts, String own) {
         Workspace workspace1 = workspaceRepository.findByTitle(workspace.getTitle());
         workspace1.getCharts().forEach(chart -> chartRepository.delete(chart));
         charts.forEach(chart -> {
             chart.setChartId(sequenceGenerator.generateSequence(chart.SEQUENCE_NAME));
         });
         workspace1.setCharts(charts);
+        workspace1.setLastUpdate(own + " at " + new Date().toString());
         workspaceRepository.save(workspace1);
         chartRepository.saveAll(charts);
         return true;

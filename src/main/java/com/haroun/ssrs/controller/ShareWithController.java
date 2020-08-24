@@ -30,6 +30,11 @@ public class ShareWithController {
         return shareWithService.getSharedWorkspace(authentication.getName());
     }
 
+    @RequestMapping(path = "sharewith/workspace/users/{workspaceId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<AppUser> getShareWithWorkspaceUsers(@PathVariable(value = "workspaceId") long workspaceId,Authentication authentication){
+        return shareWithService.getUsersToShare(workspaceId,authentication.getName());
+    }
+
     @RequestMapping(path = "sharewith/delete/{shareWithId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String deleteShareWith(@PathVariable(value = "shareWithId") String shareWithId ){
         shareWithService.deleteSharedWith(shareWithId);
