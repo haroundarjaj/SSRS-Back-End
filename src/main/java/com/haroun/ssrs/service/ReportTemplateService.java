@@ -10,6 +10,6 @@ public interface ReportTemplateService {
 
     String insertTemplate (ReportTemplate template, String userEmail);
 
-    void deleteTemplate (ReportTemplate template);
+    Boolean deleteTemplate (long id);
 
 }

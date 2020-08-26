@@ -31,14 +31,14 @@ public class AlgorithmsController {
 
     @PostMapping("/import/database/test/{result}/{algoId}")
     public List<Object> Test(@RequestBody List<Object> allData, @PathVariable(value = "result") String result,
-                       @PathVariable(value = "algoId") String algoId,
+                       @PathVariable(value = "algoId") long algoId,
                        @PathParam(value = "variables") String variables){
         String[] var = variables.split("-");
         return this.algorithmApplyService.applyAlgorithm(allData, result, algoId, var);
     }
 
     @DeleteMapping("/algorithm/delete/{algoId}")
-    public Boolean deleteAlgorithm(@PathVariable(value = "algoId") String algoId){
+    public Boolean deleteAlgorithm(@PathVariable(value = "algoId") long algoId){
         return this.algorithmService.deleteAlgorithm(algoId);
     }
 }

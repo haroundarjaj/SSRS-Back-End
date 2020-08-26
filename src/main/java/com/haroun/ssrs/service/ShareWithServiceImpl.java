@@ -9,7 +9,10 @@ import com.haroun.ssrs.repository.ShareWithRepository;
 import com.haroun.ssrs.repository.WorkspaceRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,7 +57,7 @@ public class ShareWithServiceImpl implements ShareWithService {
     }
 
     @Override
-    public void deleteSharedWith(String shareWithId) {
+    public void deleteSharedWith(long shareWithId) {
         this.shareWithRepository.findById(shareWithId).map(shareWith -> {
             this.shareWithRepository.delete(shareWith);
             return "";

@@ -36,7 +36,7 @@ public class DatabaseSourceServiceImpl implements DatabaseSourceService {
     SequenceGeneratorService sequenceGenerator;
 
     @Override
-    public boolean testConnection(DatabaseSource dbs) {
+    public Boolean testConnection(DatabaseSource dbs) {
         String url = "";
         String driverClass = "";
         boolean isConnected = false;
@@ -175,9 +175,10 @@ public class DatabaseSourceServiceImpl implements DatabaseSourceService {
     }
 
     @Override
-    public void deleteDatabaseSource(DatabaseSource dbs) {
-        System.out.println("deleting");
-        System.out.println(dbs);
-        dbsourceRepository.delete(dbs);
+    public Boolean deleteDatabaseSource(long id) {
+        return dbsourceRepository.findById(id).map(al ->{
+            dbsourceRepository.delete(al);
+            return true;
+        }).orElseThrow(()-> new ExceptionMessage("Impossible to delete database source"));
     }
 }

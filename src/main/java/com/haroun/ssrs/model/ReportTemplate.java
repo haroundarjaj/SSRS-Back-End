@@ -1,11 +1,7 @@
 package com.haroun.ssrs.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,9 +11,11 @@ import java.util.Date;
 
 @Document(value = "reportTemplate")
 @Data
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class ReportTemplate implements Serializable {
 
     @Transient
@@ -31,13 +29,4 @@ public class ReportTemplate implements Serializable {
 
     @DBRef
     private AppUser user;
-
-    @PersistenceConstructor
-    public ReportTemplate(long reportTemplateId, String name, String templateParam, Date creationTime, AppUser user) {
-        this.reportTemplateId = reportTemplateId;
-        this.name = name;
-        this.templateParam = templateParam;
-        this.creationTime = creationTime;
-        this.user = user;
-    }
 }

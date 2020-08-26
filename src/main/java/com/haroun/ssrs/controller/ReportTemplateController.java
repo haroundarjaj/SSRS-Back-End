@@ -28,9 +28,9 @@ public class ReportTemplateController {
         reportTemplateService.insertTemplate(reportTemplate, authentication.getName());
     }
 
-    @PostMapping("/delete")
-    public void deleteReportTemplate (@RequestBody ReportTemplate reportTemplate) {
-        reportTemplateService.deleteTemplate(reportTemplate);
+    @DeleteMapping("/delete/{id}")
+    public Boolean deleteReportTemplate (@PathVariable("id") long id) {
+        return reportTemplateService.deleteTemplate(id);
     }
 
 }

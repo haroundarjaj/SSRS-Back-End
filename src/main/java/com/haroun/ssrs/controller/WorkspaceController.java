@@ -27,10 +27,12 @@ public class WorkspaceController {
     }
 
     @PostMapping("/save")
-    public boolean saveWorkspace (@RequestBody List<Object> objects, Authentication authentication) {
+    public Boolean saveWorkspace (@RequestBody List<Object> objects, Authentication authentication) {
         ObjectMapper mapper = new ObjectMapper();
         Workspace workspace = mapper.convertValue(objects.get(0), Workspace.class);
         List<Chart> charts = mapper.convertValue(objects.get(1), new TypeReference<List<Chart>>(){});
+        System.out.println("email");
+        System.out.println(authentication.getName());
         return workspaceService.saveWorkspace(workspace, charts, authentication.getName());
     }
 
@@ -40,20 +42,20 @@ public class WorkspaceController {
     }
 
     @GetMapping("/checkExistence/{title}")
-    public boolean checkExistWorkspace (@PathVariable("title") String title, Authentication authentication) {
+    public Boolean checkExistWorkspace (@PathVariable("title") String title, Authentication authentication) {
         return workspaceService.checkExistWorkspace(title);
     }
 
     @PostMapping("/update")
-    public boolean updateWorkspace (@RequestBody List<Object> objects, Authentication authentication) {
+    public Boolean updateWorkspace (@RequestBody List<Object> objects, Authentication authentication) {
         ObjectMapper mapper = new ObjectMapper();
         Workspace workspace = mapper.convertValue(objects.get(0), Workspace.class);
         List<Chart> charts = mapper.convertValue(objects.get(1), new TypeReference<List<Chart>>(){});
         return workspaceService.updateWorkspace(workspace, charts, authentication.getName());
     }
 
-    @PostMapping("/delete")
-    public boolean deleteWorkspace (@RequestBody Workspace workspace) {
-        return workspaceService.deleteWorkspace(workspace);
+    @DeleteMapping("/delete/{id}")
+    public Boolean deleteWorkspace (@PathVariable("id") long id) {
+        return workspaceService.deleteWorkspace(id);
     }
 }

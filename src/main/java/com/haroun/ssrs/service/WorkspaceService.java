@@ -9,13 +9,13 @@ public interface WorkspaceService {
 
     List<Workspace> getAllWorkspaces (String userEmail);
 
-    boolean saveWorkspace (Workspace workspace, List<Chart> charts, String userEmail);
+    Boolean saveWorkspace (Workspace workspace, List<Chart> charts, String userEmail);
 
-    boolean updateWorkspace (Workspace workspace, List<Chart> charts, String own);
+    Boolean updateWorkspace (Workspace workspace, List<Chart> charts, String own);
 
     List<Chart> getTemplateCharts(long id);
 
-    boolean checkExistWorkspace(String title);
+    Boolean checkExistWorkspace(String title);
 
-    boolean deleteWorkspace (Workspace workspace);
+    Boolean deleteWorkspace (long id);
 }

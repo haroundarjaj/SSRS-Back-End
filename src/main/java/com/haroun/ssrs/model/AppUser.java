@@ -1,11 +1,7 @@
 package com.haroun.ssrs.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,9 +11,11 @@ import java.util.Date;
 
 @Document(value = "users")
 @Data
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class AppUser implements Serializable {
 
     @Transient
@@ -25,6 +23,7 @@ public class AppUser implements Serializable {
 
     @Id
     private long userId;
+
     private String username;
     private String email;
     private String password;
@@ -37,19 +36,4 @@ public class AppUser implements Serializable {
 
     @DBRef
     private AppRole role;
-
-    @PersistenceConstructor
-    public AppUser(long userId, String username, String email, String password, String idCardNumber, String address, Date birthday, String image, Date creationTime, boolean activated, AppRole role) {
-        this.userId = userId;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.idCardNumber = idCardNumber;
-        this.address = address;
-        this.birthday = birthday;
-        this.image = image;
-        this.creationTime = creationTime;
-        this.activated = activated;
-        this.role = role;
-    }
 }

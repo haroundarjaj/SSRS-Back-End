@@ -34,7 +34,7 @@ public class UserTaskServiceImpl implements UserTaskService {
     }
 
     @Override
-    public boolean addTask(UserTask task, String userEmail) {
+    public Boolean addTask(UserTask task, String userEmail) {
         AppUser user = appUserRepository.findByEmail(userEmail);
         task.setTaskId(sequenceGenerator.generateSequence(task.SEQUENCE_NAME));;
         task.setUser(user);
@@ -43,14 +43,16 @@ public class UserTaskServiceImpl implements UserTaskService {
     }
 
     @Override
-    public boolean updateTask(UserTask task) {
+    public Boolean updateTask(UserTask task) {
         userTaskRepository.save(task);
         return true;
     }
 
     @Override
-    public boolean deleteTask(UserTask task) {
-        userTaskRepository.delete(task);
-        return true;
+    public Boolean deleteTask(long id) {
+        return userTaskRepository.findById(id).map(al ->{
+            userTaskRepository.delete(al);
+            return true;
+        }).orElseThrow(()-> new ExceptionMessage("Impossible to delete task"));
     }
 }

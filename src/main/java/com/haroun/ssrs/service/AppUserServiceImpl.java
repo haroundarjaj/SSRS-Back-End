@@ -2,6 +2,7 @@ package com.haroun.ssrs.service;
 
 import com.haroun.ssrs.model.AppRole;
 import com.haroun.ssrs.model.AppUser;
+import com.haroun.ssrs.model.ShareWith;
 import com.haroun.ssrs.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,10 +30,22 @@ public class AppUserServiceImpl implements AppUserService {
     WorkspaceRepository workspaceRepository;
 
     @Autowired
+    ChartRepository chartRepository;
+
+    @Autowired
+    ShareWithRepository shareWithRepository;
+
+    @Autowired
     FormulaRepository formulaRepository;
 
     @Autowired
+    DashboardRepository dashboardRepository;
+
+    @Autowired
     DatabaseSourceRepository databaseSourceRepository;
+
+    @Autowired
+    AlgorithmRepository algorithmRepository;
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -149,17 +162,33 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public void deleteUser(AppUser user) {
-        workspaceRepository.findAllByUser(user).forEach(workspace -> {
-            workspaceRepository.delete(workspace);
-        });
-        databaseSourceRepository.findAllByUser(user).forEach(databaseSource -> {
-            databaseSourceRepository.delete(databaseSource);
-        });
-        formulaRepository.findAllByUser(user).forEach(formula -> {
-            formulaRepository.delete(formula);
-        });
-        appUserRepository.delete(user);
+    public Boolean deleteUser(long id) {
+        return appUserRepository.findById(id).map(user ->{
+            workspaceRepository.findAllByUser(user).forEach(workspace -> {
+                workspace.getCharts().forEach(chart -> chartRepository.delete(chart));
+                ShareWith shareWith = shareWithRepository.findByWorkspace(workspace);
+                if(shareWith != null) {
+                    shareWithRepository.delete(shareWith);
+                }
+                workspaceRepository.delete(workspace);
+            });
+            dashboardRepository.findByUser(user).map(dshb ->{
+                chartRepository.deleteAll(dshb.getCharts());
+                dashboardRepository.delete(dshb);
+                return true;
+            }).orElseThrow(()-> new ExceptionMessage("Impossible to delete dashboard"));
+            databaseSourceRepository.findAllByUser(user).forEach(databaseSource -> {
+                databaseSourceRepository.delete(databaseSource);
+            });
+            formulaRepository.findAllByUser(user).forEach(formula -> {
+                formulaRepository.delete(formula);
+            });
+            algorithmRepository.findAllByUser(user).forEach(algo -> {
+                algorithmRepository.delete(algo);
+            });
+            appUserRepository.delete(user);
+            return true;
+        }).orElseThrow(()-> new ExceptionMessage("Impossible to delete user"));
     }
 
     /* @Override

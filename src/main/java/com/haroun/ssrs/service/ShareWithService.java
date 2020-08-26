@@ -9,7 +9,7 @@ import java.util.List;
 public interface ShareWithService {
     ShareWith shareWith(long workspaceId, ShareWith shareWith);
     List<Workspace> getSharedWorkspace(String email);
-    void deleteSharedWith(String shareWithId);
+    void deleteSharedWith(long shareWithId);
     void deleteUserInShareWith(long workspaceId, String email);
     List<AppUser> getShareWithUsers(long workspaceId);
     List<AppUser> getUsersToShare(long workspaceId, String owner);

@@ -43,15 +43,15 @@ public class AlgorithmServiceImpl implements AlgorithmService {
     }
 
     @Override
-    public Boolean deleteAlgorithm(String algoId) {
+    public Boolean deleteAlgorithm(long algoId) {
         return algorithmRepository.findById(algoId).map(al ->{
             algorithmRepository.delete(al);
             return true;
-        }).orElseThrow(()-> new ExceptionMessage("Impossible to delete Algorithm"));
+        }).orElseThrow(()-> new ExceptionMessage("Impossible to delete algorithm"));
     }
 
     @Override
-    public Algorithms updateAlgorithms(String algoId, Algorithms algorithms) {
+    public Algorithms updateAlgorithms(long algoId, Algorithms algorithms) {
         return algorithmRepository.findById(algoId).map(al ->{
             al.setAlgoDescription(algorithms.getAlgoDescription());
             al.setAlgoName(algorithms.getAlgoName());

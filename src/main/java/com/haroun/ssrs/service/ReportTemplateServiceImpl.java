@@ -43,7 +43,10 @@ public class ReportTemplateServiceImpl implements ReportTemplateService {
     }
 
     @Override
-    public void deleteTemplate(ReportTemplate template) {
-        reportTemplateRepository.delete(template);
+    public Boolean deleteTemplate(long id) {
+        return reportTemplateRepository.findById(id).map(al ->{
+            reportTemplateRepository.delete(al);
+            return true;
+        }).orElseThrow(()-> new ExceptionMessage("Impossible to delete template"));
     }
 }

@@ -18,7 +18,7 @@ public class DatabaseSourceController {
         this.dbSourceService = dbSourceService;
     }
 
-    @PostMapping("/testconnection")
+    @PostMapping("/testConnection")
     public boolean testConnection (@RequestBody DatabaseSource dbs){
         return  dbSourceService.testConnection(dbs);
     }
@@ -33,16 +33,16 @@ public class DatabaseSourceController {
         return  dbSourceService.getTableData(dbs, tableName);
     }
 
-    @GetMapping("/getsources")
+    @GetMapping("/getSources")
     public List<DatabaseSource> getSources (Authentication authentication){
         return  dbSourceService.getAllDatabaseSources(authentication.getName());
     }
 
-    @PostMapping("/savesource")
+    @PostMapping("/saveSource")
     public void saveSource (@RequestBody DatabaseSource dbs, Authentication authentication) {
         dbSourceService.saveDatabaseSource(dbs, authentication.getName());
     }
 
-    @PostMapping("/deletesource")
-    public void deleteSource (@RequestBody DatabaseSource dbs) { dbSourceService.deleteDatabaseSource(dbs); }
+    @DeleteMapping("/deleteSource/{id}")
+    public Boolean deleteSource (@PathVariable("id") long id) { return dbSourceService.deleteDatabaseSource(id); }
 }

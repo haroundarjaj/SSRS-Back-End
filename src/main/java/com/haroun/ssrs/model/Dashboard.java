@@ -1,11 +1,7 @@
 package com.haroun.ssrs.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,9 +12,11 @@ import java.util.List;
 
 @Document(collection = "dashboard")
 @Data
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Dashboard implements Serializable {
 
     @Transient
@@ -33,12 +31,4 @@ public class Dashboard implements Serializable {
 
     @DBRef
     private List<Chart> charts;
-
-    @PersistenceConstructor
-    public Dashboard(long dashboardId, Date lastEditTime, AppUser user, List<Chart> charts) {
-        this.dashboardId = dashboardId;
-        this.lastEditTime = lastEditTime;
-        this.user = user;
-        this.charts = charts;
-    }
 }

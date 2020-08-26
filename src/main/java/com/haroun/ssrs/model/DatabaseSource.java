@@ -2,7 +2,6 @@ package com.haroun.ssrs.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,9 +10,10 @@ import java.io.Serializable;
 
 @Document(collection = "dbsources")
 @Data
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class DatabaseSource implements Serializable {
 
@@ -32,17 +32,4 @@ public class DatabaseSource implements Serializable {
 
     @DBRef
     private AppUser user;
-
-    @PersistenceConstructor
-
-    public DatabaseSource(long databaseSourceId, String type, String username, String password, String host, String port, String databaseName, AppUser user) {
-        this.databaseSourceId = databaseSourceId;
-        this.type = type;
-        this.username = username;
-        this.password = password;
-        this.host = host;
-        this.port = port;
-        this.databaseName = databaseName;
-        this.user = user;
-    }
 }

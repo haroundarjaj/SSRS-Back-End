@@ -8,9 +8,9 @@ public interface UserTaskService {
 
     List<UserTask> getAllTasks (String userEmail);
 
-    boolean addTask (UserTask task, String userEmail);
+    Boolean addTask (UserTask task, String userEmail);
 
-    boolean updateTask (UserTask task);
+    Boolean updateTask (UserTask task);
 
-    boolean deleteTask(UserTask task);
+    Boolean deleteTask(long id);
 }

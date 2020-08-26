@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface DatabaseSourceService {
 
-    boolean testConnection(DatabaseSource dbs);
+    Boolean testConnection(DatabaseSource dbs);
 
     List<String> getTables(DatabaseSource dbs);
 
@@ -16,5 +16,5 @@ public interface DatabaseSourceService {
 
     void saveDatabaseSource(DatabaseSource dbs, String userEmail);
 
-    void deleteDatabaseSource(DatabaseSource dbs);
+    Boolean deleteDatabaseSource(long id);
 }

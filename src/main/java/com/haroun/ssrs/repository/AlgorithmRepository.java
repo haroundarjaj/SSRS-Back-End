@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface AlgorithmRepository extends MongoRepository<Algorithms, String> {
+public interface AlgorithmRepository extends MongoRepository<Algorithms, Long> {
     List<Algorithms> findAllByUser(AppUser appUser);
 }

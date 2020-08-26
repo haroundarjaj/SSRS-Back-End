@@ -36,7 +36,7 @@ public class ShareWithController {
     }
 
     @RequestMapping(path = "sharewith/delete/{shareWithId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteShareWith(@PathVariable(value = "shareWithId") String shareWithId ){
+    public String deleteShareWith(@PathVariable(value = "shareWithId") long shareWithId ){
         shareWithService.deleteSharedWith(shareWithId);
         return "done";
     }

@@ -24,17 +24,17 @@ public class UserTaskController {
     }
 
     @PostMapping("/add")
-    public boolean addTask (@RequestBody UserTask task, Authentication authentication) {
+    public Boolean addTask (@RequestBody UserTask task, Authentication authentication) {
         return userTaskService.addTask(task, authentication.getName());
     }
 
     @PostMapping("/update")
-    public boolean updateTask (@RequestBody UserTask task) {
+    public Boolean updateTask (@RequestBody UserTask task) {
         return userTaskService.updateTask(task);
     }
 
-    @PostMapping("/delete")
-    public boolean deleteTask (@RequestBody UserTask task) {
-        return userTaskService.deleteTask(task);
+    @PostMapping("/delete/{id}")
+    public Boolean deleteTask (@PathVariable("id") long id) {
+        return userTaskService.deleteTask(id);
     }
 }

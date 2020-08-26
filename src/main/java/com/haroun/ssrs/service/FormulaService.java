@@ -10,7 +10,7 @@ public interface FormulaService {
 
     String insertFormula(Formula formula, String userEmail);
 
-    void deleteFormula (Formula formula);
+    Boolean deleteFormula (long id);
 
     List<Object> solveFormula(List<Object> elements);
 }

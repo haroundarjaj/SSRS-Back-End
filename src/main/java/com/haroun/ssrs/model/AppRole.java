@@ -1,11 +1,7 @@
 package com.haroun.ssrs.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,7 +11,9 @@ import java.io.Serializable;
 @Data
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class AppRole implements Serializable {
 
     @Transient
@@ -24,11 +22,4 @@ public class AppRole implements Serializable {
     @Id
     private long roleId;
     private String role;
-
-    @PersistenceConstructor
-
-    public AppRole(long roleId, String role) {
-        this.roleId = roleId;
-        this.role = role;
-    }
 }

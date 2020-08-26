@@ -39,6 +39,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Override
     public List<Workspace> getAllWorkspaces(String userEmail) {
         AppUser user = appUserRepository.findByEmail(userEmail);
+        System.out.println("user");
+        System.out.println(user);
         List<Workspace> workspaces = new ArrayList<>(workspaceRepository.findAllByUser(user));
         Collections.reverse(workspaces);
         return workspaces;
@@ -55,7 +57,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public boolean checkExistWorkspace(String title) {
+    public Boolean checkExistWorkspace(String title) {
         Workspace workspaces = workspaceRepository.findByTitle(title);
         System.out.println(workspaces);
         if (workspaces != null) {
@@ -65,16 +67,21 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public boolean deleteWorkspace(Workspace workspace) {
-        workspace.getCharts().forEach(chart -> chartRepository.delete(chart));
-        ShareWith shareWith = shareWithRepository.findByWorkspace(workspace);
-        shareWithRepository.delete(shareWith);
-        workspaceRepository.delete(workspace);
-        return true;
+    public Boolean deleteWorkspace(long id) {
+        return workspaceRepository.findById(id).map(workspace ->{
+            workspace.getCharts().forEach(chart -> chartRepository.delete(chart));
+            ShareWith shareWith = shareWithRepository.findByWorkspace(workspace);
+            if(shareWith != null) {
+                shareWithRepository.delete(shareWith);
+            }
+            workspaceRepository.delete(workspace);
+            return true;
+        }).orElseThrow(()-> new ExceptionMessage("Impossible to delete Algorithm"));
+
     }
 
     @Override
-    public boolean saveWorkspace(Workspace workspace, List<Chart> charts, String userEmail) {
+    public Boolean saveWorkspace(Workspace workspace, List<Chart> charts, String userEmail) {
         AppUser user = appUserRepository.findByEmail(userEmail);
         workspace.setWorkspaceId(sequenceGenerator.generateSequence(workspace.SEQUENCE_NAME));
         charts.forEach(chart -> {
@@ -89,7 +96,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public boolean updateWorkspace(Workspace workspace, List<Chart> charts, String own) {
+    public Boolean updateWorkspace(Workspace workspace, List<Chart> charts, String own) {
         Workspace workspace1 = workspaceRepository.findByTitle(workspace.getTitle());
         workspace1.getCharts().forEach(chart -> chartRepository.delete(chart));
         charts.forEach(chart -> {

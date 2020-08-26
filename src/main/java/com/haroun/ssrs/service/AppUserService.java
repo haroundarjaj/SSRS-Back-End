@@ -32,7 +32,7 @@ public interface AppUserService {
 
     void updateUserRole (AppUser user, String role);
 
-    void  deleteUser (AppUser user);
+    Boolean  deleteUser (long id);
 
     // AppUser login(AppUser appUser);
 }

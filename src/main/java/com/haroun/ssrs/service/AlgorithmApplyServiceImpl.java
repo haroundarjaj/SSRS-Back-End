@@ -23,7 +23,7 @@ public class AlgorithmApplyServiceImpl implements AlgorithmApplyService {
         this.algorithmRepository = algorithmRepository;
     }
     @Override
-    public List<Object> applyAlgorithm(List<Object> data, String result,String algoId, String[] variables){
+    public List<Object> applyAlgorithm(List<Object> data, String result,long algoId, String[] variables){
         Algorithms algo = this.algorithmRepository.findById(algoId).orElseThrow(()-> new ExceptionMessage("Impossible to find Algorithm"));
         Gson gson = new Gson();
         if (algo.getAlgoType().equals("integrate")) {

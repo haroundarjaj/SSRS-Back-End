@@ -49,7 +49,12 @@ public class FormulaServiceImpl implements FormulaService {
     }
 
     @Override
-    public void deleteFormula(Formula formula) { formulaRepository.delete(formula); }
+    public Boolean deleteFormula(long id) {
+        return formulaRepository.findById(id).map(fr ->{
+            formulaRepository.delete(fr);
+            return true;
+        }).orElseThrow(()-> new ExceptionMessage("Impossible to delete Formula"));
+    }
 
     @Override
     public List<Object> solveFormula(List<Object> elements) {

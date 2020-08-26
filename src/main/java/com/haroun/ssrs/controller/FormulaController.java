@@ -33,6 +33,6 @@ public class FormulaController {
         return formulaService.solveFormula(elements);
     }
 
-    @PostMapping("/delete")
-    public void deleteFormula (@RequestBody Formula formula) { formulaService.deleteFormula(formula); }
+    @DeleteMapping("/delete/{id}")
+    public Boolean deleteFormula (@PathVariable("id") long id) { return formulaService.deleteFormula(id); }
 }
