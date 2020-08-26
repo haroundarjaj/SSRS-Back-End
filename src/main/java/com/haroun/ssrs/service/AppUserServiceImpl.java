@@ -48,6 +48,9 @@ public class AppUserServiceImpl implements AppUserService {
     AlgorithmRepository algorithmRepository;
 
     @Autowired
+    ImportedTableRepository importedTableRepository;
+
+    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
@@ -185,6 +188,9 @@ public class AppUserServiceImpl implements AppUserService {
             });
             algorithmRepository.findAllByUser(user).forEach(algo -> {
                 algorithmRepository.delete(algo);
+            });
+            importedTableRepository.findAllByUser(user).forEach(table -> {
+                importedTableRepository.delete(table);
             });
             appUserRepository.delete(user);
             return true;

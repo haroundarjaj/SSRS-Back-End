@@ -19,7 +19,7 @@ public class UserTaskController {
     }
 
     @GetMapping("/getAll")
-    public List<UserTask> getAllWorkspaces (Authentication authentication) {
+    public List<UserTask> getAllTasks (Authentication authentication) {
         return userTaskService.getAllTasks(authentication.getName());
     }
 
@@ -33,7 +33,7 @@ public class UserTaskController {
         return userTaskService.updateTask(task);
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public Boolean deleteTask (@PathVariable("id") long id) {
         return userTaskService.deleteTask(id);
     }
