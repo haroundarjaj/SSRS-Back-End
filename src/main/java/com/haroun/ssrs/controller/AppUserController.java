@@ -56,7 +56,7 @@ public class AppUserController {
         appUserService.updateUserRole(user, role);
     }
 
-    @PostMapping("/deleteUser/{id}")
+    @DeleteMapping("/deleteUser/{id}")
     public Boolean deleteUser(@PathVariable("id") long id) { return appUserService.deleteUser(id); }
 
     /* @PostMapping("/login")

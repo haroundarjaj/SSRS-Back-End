@@ -21,7 +21,7 @@ import java.util.List;
 public class FileSourceServiceImpl implements FileSourceService {
 
     @Override
-    public String readExcelFile(File file, int sheetNumber) {
+    public String readExcelFile(File file, int sheetNumber, int headerLine) {
         Workbook workbook = null;
         JsonObject sheetsJsonObject = new JsonObject();
         JsonArray sheetArray = new JsonArray();
@@ -32,12 +32,19 @@ public class FileSourceServiceImpl implements FileSourceService {
             ArrayList<String> columnNames = new ArrayList<String>();
             Sheet sheet = workbook.getSheetAt(sheetNumber);
             Iterator<Row> sheetIterator = sheet.iterator();
+            for(int i = 0; i<headerLine-1; i++){
+                sheetIterator.next();
+                System.out.println("iteration " + i);
+            }
 
             while (sheetIterator.hasNext()) {
                 Row currentRow = sheetIterator.next();
                 JsonObject jsonObject = new JsonObject();
-
-                if (currentRow.getRowNum() != 0) {
+                System.out.println("current row");
+                System.out.println(currentRow.getRowNum());
+                System.out.println("headerLine");
+                System.out.println(headerLine-1);
+                if (currentRow.getRowNum() != (headerLine-1)) {
 
                     for (int j = 0; j < columnNames.size(); j++) {
 
@@ -62,6 +69,8 @@ public class FileSourceServiceImpl implements FileSourceService {
                     for (int k = 0; k < currentRow.getPhysicalNumberOfCells(); k++) {
                         columnNames.add(currentRow.getCell(k).getStringCellValue());
                     }
+                    System.out.println("columnNames");
+                    System.out.println(columnNames);
                 }
 
 

@@ -19,8 +19,8 @@ public class FileSourceController {
     }
 
 
-    @RequestMapping(value = "/excel&sheet={sheetNumber}", headers = "content-type=multipart/*", method = RequestMethod.POST)
-    public String readExcelFile(@RequestParam(value = "file", required = true) MultipartFile multipartFile, @PathVariable("sheetNumber") int sheetNumber) throws IOException {
+    @RequestMapping(value = "/excel&sheet={sheetNumber}&headerLine={headerLine}", headers = "content-type=multipart/*", method = RequestMethod.POST)
+    public String readExcelFile(@RequestParam(value = "file", required = true) MultipartFile multipartFile, @PathVariable("sheetNumber") int sheetNumber, @PathVariable("headerLine") int headerLine) throws IOException {
         System.out.println(multipartFile.getSize());
         System.out.println(multipartFile.getBytes());
         System.out.println(multipartFile.getContentType());
@@ -31,7 +31,7 @@ public class FileSourceController {
         multipartFile.transferTo(tempFile);
         System.out.println("tempFile");
         System.out.println(tempFile);
-        String data = fileSourceService.readExcelFile(tempFile, sheetNumber);
+        String data = fileSourceService.readExcelFile(tempFile, sheetNumber, headerLine);
 
         System.out.println("data");
         System.out.println(data);

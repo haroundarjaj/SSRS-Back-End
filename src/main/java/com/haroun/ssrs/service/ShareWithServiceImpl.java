@@ -7,6 +7,7 @@ import com.haroun.ssrs.model.Workspace;
 import com.haroun.ssrs.repository.AppUserRepository;
 import com.haroun.ssrs.repository.ShareWithRepository;
 import com.haroun.ssrs.repository.WorkspaceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +18,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class ShareWithServiceImpl implements ShareWithService {
+
+    @Autowired
+    SequenceGeneratorService sequenceGenerator;
+
     private AppUserRepository appUserRepository;
     private WorkspaceRepository workspaceRepository;
     private ShareWithRepository shareWithRepository;
@@ -37,6 +42,7 @@ public class ShareWithServiceImpl implements ShareWithService {
                 return this.shareWithRepository.save(shareWith2);
             } else {
                 ShareWith shareWith1 = new ShareWith();
+                shareWith1.setShareId(sequenceGenerator.generateSequence(shareWith1.SEQUENCE_NAME));
                 shareWith1.setWorkspace(workspace);
                 shareWith1.setSharedAt(new Date());
                 shareWith1.setLastUpdate(new Date());

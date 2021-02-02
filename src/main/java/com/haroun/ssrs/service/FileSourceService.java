@@ -4,7 +4,7 @@ import java.io.File;
 
 public interface FileSourceService {
 
-    String readExcelFile(File file, int sheetNumber);
+    String readExcelFile(File file, int sheetNumber, int headerLine);
 
     String readCsvFile(File file, boolean header);
 

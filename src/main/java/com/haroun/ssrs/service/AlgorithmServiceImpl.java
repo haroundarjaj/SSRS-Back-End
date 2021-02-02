@@ -5,6 +5,7 @@ import com.haroun.ssrs.model.Algorithms;
 import com.haroun.ssrs.model.AppUser;
 import com.haroun.ssrs.repository.AlgorithmRepository;
 import com.haroun.ssrs.repository.AppUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +15,13 @@ import java.util.List;
 @Service
 @Transactional
 public class AlgorithmServiceImpl implements AlgorithmService {
+
+    @Autowired
+    SequenceGeneratorService sequenceGenerator;
+
     private AppUserRepository appUserRepository;
     private AlgorithmRepository algorithmRepository;
+
     public AlgorithmServiceImpl(AlgorithmRepository algorithmRepository, AppUserRepository appUserRepository){
         this.algorithmRepository = algorithmRepository;
         this.appUserRepository = appUserRepository;
@@ -30,6 +36,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
         AppUser user = appUserRepository.findByEmail(owner);
         if (user != null) {
             Algorithms algo = new Algorithms();
+            algo.setAlgoId(sequenceGenerator.generateSequence(algo.SEQUENCE_NAME));
             algo.setAlgoDescription(algorithms.getAlgoDescription());
             algo.setAlgoName(algorithms.getAlgoName());
             algo.setAlgoType(algorithms.getAlgoType());
